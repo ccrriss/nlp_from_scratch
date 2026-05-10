@@ -1,0 +1,20 @@
+# Python Cache
+
+__pycache__/
+
+# Virtual environments
+.venv/
+venv/
+
+#
+config.py
+functions.py
+layers.py
+np.py
+optimizer.py
+trainer.py
+util.py
+
+# leetcode
+
+leetcode/
