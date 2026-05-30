@@ -18,3 +18,8 @@ util.py
 # leetcode
 
 leetcode/
+
+# Files generated
+
+ptb.*
+cbow_params.pkl
