@@ -16,7 +16,7 @@ This repository contains my notes and code implementations while studying NLP an
 ## Current Progress
 
 - [x] Chapter 02: PPMI and SVD
-- [ ] Chapter 03: Word2Vec
-- [ ] Chapter 04: Word2Vec Speedup
+- [x] Chapter 03: Word2Vec
+- [x] Chapter 04: Word2Vec Speedup
 - [ ] RNN / LSTM
 - [ ] Attention / Seq2Seq
