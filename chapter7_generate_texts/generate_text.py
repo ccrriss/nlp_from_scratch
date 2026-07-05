@@ -1,0 +1,25 @@
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(BASE_DIR))
+
+from chapter7_generate_texts.C7 import RnnlmGen
+import ptb
+
+corpus, word_to_id, id_to_word = ptb.load_data('train')
+vocab_size = len(word_to_id)
+corpus_size = len(corpus)
+
+model = RnnlmGen()
+model.load_params("Rnnlm.pkl")
+
+start_word = 'you'
+start_id = word_to_id[start_word]
+skip_words = ['N', '<unk>', '$']
+skip_ids = [word_to_id[w] for w in skip_words]
+
+word_ids = model.generate(start_id, skip_ids)
+txt = ' '.join([id_to_word[i] for i in word_ids])
+txt = txt.replace(' <eos>', '.\n')
+print(txt)

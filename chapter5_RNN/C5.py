@@ -82,7 +82,7 @@ class TimeRNN:
             dx, dh = layer.backward(dh) # the result of backward
             dxs[:, t, :] = dx
 
-            for i, grad in enumerate(layer.grads):
+            for i, grad in enumerate(layer.grads): # Wx, Wh, b for each layer
                 grads[i] += grad
         
         for i, grad in enumerate(grads):
@@ -105,11 +105,11 @@ class TimeEmbedding:
         W = self.W
 
         out = np.empty((N, T, D), dtype="f")
-        self.layers = [] # 2
+        self.layers = [] 
 
         for t in range(T):
             layer = Embedding(W)
-            out[:, t, :] = layer.forward(xs[:, t]) # 1d
+            out[:, t, :] = layer.forward(xs[:, t]) 
             self.layers.append(layer)
  
         return out
@@ -136,26 +136,28 @@ class TimeAffine:
     
     def forward(self, hs: np.ndarray): # N, T, H as the shape
         N, T, H = hs.shape
-        W, b = self.params # W shape: (H, D)  ; b shape: (D,)
-        H, D = W.shape
+        W, b = self.params # W shape: (H, V)  ; b shape: (V,)
+        H_W, V = W.shape
 
-        rhs = hs.reshape(N*T, -1)
-        out = np.dot(rhs, W) + b
+        assert H == H_W
+
+        rhs = hs.reshape(N*T, -1) # (N*T, H)
+        out = np.dot(rhs, W) + b  # (N*T, V)
         self.hs = hs
 
         return out.reshape(N, T, -1)
 
-    def backward(self, dout: np.ndarray): # dout's shape is N, T, D
+    def backward(self, dout: np.ndarray): # dout's shape is N, T, V
         hs = self.hs
         N, T, H = hs.shape
-        W, b = self.params # W:(H, D)
+        W, b = self.params # W:(H, V)
 
         rhs = hs.reshape(N*T, -1)     # (N*T, H)
-        dout = dout.reshape(N*T, -1) # (N*T, D)
+        dout = dout.reshape(N*T, -1) # (N*T, V)
 
         db = np.sum(dout, axis=0)
-        dhs = np.dot(dout, W.T) # (N*T, H)
-        dW = np.dot(rhs.T, dout) #(H, D)
+        dhs = np.dot(dout, W.T) 
+        dW = np.dot(rhs.T, dout) 
 
         dhs = dhs.reshape(*hs.shape)
 
@@ -172,7 +174,7 @@ class TimeSoftmaxWithLoss:
         self.cache = None
         self.ignore_label = -1
     
-    def forward(self, xs: np.ndarray, ys: np.ndarray): # (N, T, H) as x.shape, t.shape shouldbe (N,T)
+    def forward(self, xs: np.ndarray, ys: np.ndarray): # (N, T, V) as x.shape, t.shape shouldbe (N,T)
         N, T, V = xs.shape
 
         if ys.ndim == 3:  # change one-hot to label
@@ -185,7 +187,7 @@ class TimeSoftmaxWithLoss:
         mask = mask.reshape(N * T)
 
         y_predicts = softmax(xs) # shape is (N*T, V)
-        ls = np.log(y_predicts[np.arange(N * T), ys]) # cross entropy error
+        ls = np.log(y_predicts[np.arange(N * T), ys])  
         ls *= mask 
         loss = -np.sum(ls)
         loss /= mask.sum()

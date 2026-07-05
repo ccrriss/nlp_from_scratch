@@ -37,7 +37,7 @@ model = SimpleRnnlm(vocab_size, wordvec_size, hidden_size)
 optimizer = SGD(lr)
 
 # get start position of minibatch
-jump = (corpus_size - 1) // batch_size # 999 // 10 = 99
+jump = (corpus_size - 1) // batch_size # 999//10 = 99
 offsets = [i * jump for i in range(batch_size)] # [0, 99, 198, 297, 396, 495, 594, 693, 792, 891]
 
 for epoch in range(max_epoch): # 100, 0 to 99
