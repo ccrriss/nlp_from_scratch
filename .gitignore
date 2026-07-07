@@ -17,6 +17,7 @@ util.py
 time_layers.py
 base_model.py
 Rnnlm.pkl
+BetterRnnlm.pkl
 # leetcode
 
 leetcode/
@@ -25,3 +26,6 @@ leetcode/
 
 ptb.*
 cbow_params.pkl
+
+# References
+references/

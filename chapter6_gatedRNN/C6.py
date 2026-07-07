@@ -204,7 +204,12 @@ class RnnLM(BaseModel):
     def load_params(self, file_name='Rnnlm.pkl'):
         file_path = param_path / file_name
         with open(file_path, 'rb') as f:
-            self.params = pickle.load(f)
+            params = pickle.load(f)
+        
+        for i, param in enumerate(params):
+            assert self.params[i].shape == param.shape, \
+            f'shape mismatch at index{i}: {self.params[i].shape} vs {param.shape}'
+            self.params[i][...] = param
 
 class TimeDropout:
     def __init__(self, dropout_ratio=0.5):
@@ -290,4 +295,9 @@ class BetterRnnlm(BaseModel):
     def load_params(self, file_name='Rnnlm.pkl'):
         file_path = param_path / file_name
         with open(file_path, 'rb') as f:
-            self.params = pickle.load(f)
+            params = pickle.load(f)
+        
+        for i, param in enumerate(params):
+            assert self.params[i].shape == param.shape, \
+            f'shape mismatch at index{i}: {self.params[i].shape} vs {param.shape}'
+            self.params[i][...] = param
